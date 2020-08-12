@@ -62,3 +62,5 @@ command.nbArgs = [2, 400]
 # unless you change the name of the above methods)
 command.usage = usage
 command.handle = handle
+
+# Don't forget to add this file to BotGeoguessr.py (in the module list).
