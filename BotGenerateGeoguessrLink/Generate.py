@@ -1,6 +1,7 @@
 import time
 
 import Utils
+import Command
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -17,7 +18,7 @@ loginPage = "https://www.geoguessr.com/signin"
 mail = "mail"
 
 # My password (ugh)
-password = "passwd"
+password = "passdw"
 
 # XPATH LIST
 xpath_play = "/html/body/div/div/main/div/div/div[1]/div[3]/button"
@@ -35,6 +36,10 @@ xpath_URL = "/html/body/div/div/main/div/div/div/div/div/article/div/div[2]/span
 
 # The time slider factor : 8 to the right = 10 seconds
 shift = 8
+
+# Emojis (help display)
+acc = ":arrows_counterclockwise:"
+ac = ":arrows_clockwise:"
 
 ###################################################################################################
 ###################################### METHODS ####################################################
@@ -129,7 +134,7 @@ async def generateMap(driver, url, duration):
     # If the URL is not valid
     if not await Utils.isValidURL(url):
         error = "L'URL n'est pas valide!\n"
-        return error + await usage()
+        return error + await usage(), None
 
     # Go to the URL
     driver.get(url)
@@ -145,7 +150,7 @@ async def generateMap(driver, url, duration):
     title = await getTitle(driver)
     if title == None:
         error = "L'URL ne pointe pas vers une map GeoGuessr!\n"
-        return error + await usage()
+        return error + await usage(), None
 
     # Round the duration to a valid number of seconds
     duration = await roundDuration(duration)
@@ -154,40 +159,49 @@ async def generateMap(driver, url, duration):
     await setupChallenge(driver, duration)
 
     msg = title 
-    msg += ": " + driver.find_element(By.XPATH, xpath_URL).get_attribute('value') 
-    msg += " " + str(duration) + " secondes par rounds!"
-    return msg
+    msg += ": " + driver.find_element(By.XPATH, xpath_URL).get_attribute('value')
 
-async def handleGenerate(bot, message):
-    # Split the message
-    content = message.content.split(" ")
+    if duration == 0:
+        msg += " temps illimité!"
+    else:
+        msg += " " + str(duration) + " secondes par rounds!"
+    return msg, None
 
-    # If no URL specified or too many arguments
-    if len(content) <= 1 or len(content) > 3:
-        error = "Nombre d'argument invalide!\n"
-        return error + await usage()
+async def handle(bot, command, content):
+    if bot.isWorking == False:
+        bot.isWorking = True
 
-    # Get the URL
-    url = content[1]
-    if url in bot.shortcuts:
-        url = bot.shortcuts[url]["url"]
+        # Get the URL
+        url = content[1]
+        if url in bot.shortcuts:
+            url = bot.shortcuts[url]["url"]
 
-    duration = 0
+        duration = 0
 
-    # Get the duration (if specified)
-    if len(content) == 3:
-        duration = await Utils.strToInt(content[2])
-        if duration == Utils.NAN:
-            error = "Duration n'est pas un nombre valide!\n"
-            return error + await usage()
+        # Get the duration (if specified)
+        if len(content) == 3:
+            duration = await Utils.strToInt(content[2])
+            if duration == Utils.NAN:
+                error = "Duration n'est pas un nombre valide!\n"
+                bot.isWorking = False
+                return error + await usage(), None
 
-    # Try to get an URL 5 times
-    for _ in range(5):
-        try:
-            return await generateMap(bot.driver, url, duration)
-        except Exception as _:
-            pass
+        # Try to get an URL 5 times
+        for _ in range(5):
+            try:
+                bot.isWorking = False
+                return await generateMap(bot.driver, url, duration)
+            except Exception as _:
+                pass
 
-    # If no URL could be generated, return usage
-    error = "Une erreur tierce semble s'être produite.\n"
-    return error + await usage()
+        # If no URL could be generated, return usage
+        error = "Une erreur tierce semble s'être produite.\n"
+        bot.isWorking = False
+        return error + await usage(), None
+
+command = Command.Command()
+command.emojis = [ac, acc]
+command.activation = "!!generate"
+command.nbArgs = [2, 3]
+command.usage = usage
+command.handle = handle

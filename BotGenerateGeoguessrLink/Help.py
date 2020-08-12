@@ -6,31 +6,23 @@ import Command
 ###################################################################################################
 
 # Emoji to use (help)
-book = ":book:"
+thumbsup = ":thumbsup:"
 
 ###################################################################################################
 ###################################### METHODS ####################################################
 ###################################################################################################
 
 async def usage():
-    msg = "Affiche tous les shortcuts disponibles.\n"
-    msg += "`!!list`\n"
+    msg = "Affiche cette aide.\n"
+    msg += "`!!help`\n"
     return msg
 
 async def handle(bot, command, content):
-    msg = ""
-
-    for shortcut in bot.shortcuts:
-        msg += "Map: `" + bot.shortcuts[shortcut]["title"] + "` -> Alias: `" + shortcut + "`\n"
-
-    if msg == "":
-        msg = "Aucun shortcut n'a été ajouté pour l'instant!"
-
-    return msg, None
+    return "", bot.help
 
 command = Command.Command()
-command.emojis = [book]
-command.activation = "!!list"
+command.emojis = [thumbsup]
+command.activation = "!!help"
 command.nbArgs = [1]
 command.usage = usage
 command.handle = handle

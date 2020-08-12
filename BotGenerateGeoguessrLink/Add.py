@@ -1,6 +1,7 @@
 import time
 
 import Utils
+import Command
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -8,6 +9,8 @@ from selenium.webdriver.common.keys import Keys
 ###################################################################################################
 ###################################### VARIABLES ##################################################
 ###################################################################################################
+
+wcm = ":white_check_mark:"
 
 ###################################################################################################
 ###################################### METHODS ####################################################
@@ -27,15 +30,7 @@ async def getTitle(bot):
         return None
     return None
 
-async def handleAdd(bot, message):
-    # Split the message
-    content = message.content.split(" ")
-
-    # If not enough arguments
-    if len(content) != 3:
-        error = "Nombre d'argument invalide!\n"
-        return error + await usage()
-
+async def handle(bot, command, content):
     # url : name
     url = content[1]
     name = content[2]
@@ -43,11 +38,11 @@ async def handleAdd(bot, message):
     # If the name is already used or the url is invalid
     if not await Utils.isValidURL(url):
         error = "L'URL n'est pas valide!\n"
-        return error + await usage()
+        return error + await usage(), None
 
     if name in bot.shortcuts:
         error = "Le shortcut est déjà utilisé!\n"
-        return error + await usage()
+        return error + await usage(), None
 
     # Go to the challenge page
     bot.driver.get(url)
@@ -58,11 +53,20 @@ async def handleAdd(bot, message):
     # If the url is not a map
     if title == None:
         error = "L'URL ne pointe pas vers une map GeoGuessr!\n"
-        return error + await usage()
+        return error + await usage(), None
 
-    bot.shortcuts[name] = {"title": title, "url": url}
+    bot.shortcuts[name] = {"title": title, "url": url.strip("\n")}
 
     msg = "Le raccourci " + name + " vers la map " + title + " a été ajouté!\n"
     msg += "Il est à présent possible de taper `!!generate " + name + " [duration]` pour générer une map " + title + " !"
 
-    return msg
+    await Utils.saveShortcuts(bot)
+
+    return msg, None
+
+command = Command.Command()
+command.emojis = [wcm]
+command.activation = "!!add"
+command.nbArgs = [3]
+command.usage = usage
+command.handle = handle

@@ -15,6 +15,12 @@ NAN = None
 # Path to the title of the map
 xpath_title = "/html/body/div/div/main/div/div/div[1]/div[1]/div[2]/h1"
 
+# Shortcut file
+sfile = "shortcuts.txt"
+
+# Shortcut delimiter
+sdelimiter = "$$$"
+
 ###################################################################################################
 ###################################### METHODS ####################################################
 ###################################################################################################
@@ -52,3 +58,22 @@ async def isValidURL(url):
 # Get the title of the map
 async def getTitle(driver):
     return driver.find_element(By.XPATH, xpath_title).text
+
+# Loads all shortcuts
+async def loadShortcuts(bot):
+        try:
+            with open(sfile, "r") as f:
+                for line in f:
+                    line = line.split(sdelimiter)
+                    if len(line) == 3:
+                        bot.shortcuts[line[0]] = {"title": line[1], "url": line[2]}
+        except Exception as _:
+            pass
+
+async def saveShortcuts(bot):
+    with open(sfile, "w") as f:
+        for shortcut in bot.shortcuts:
+            line = shortcut + sdelimiter 
+            line += bot.shortcuts[shortcut]["title"] + sdelimiter 
+            line += bot.shortcuts[shortcut]["url"] + "\n"
+            f.write(line)

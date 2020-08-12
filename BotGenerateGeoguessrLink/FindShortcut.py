@@ -1,4 +1,12 @@
 import time
+import Command
+
+###################################################################################################
+###################################### VARIABLES ##################################################
+###################################################################################################
+
+# Emoji to use (help)
+question = ":question:"
 
 ###################################################################################################
 ###################################### METHODS ####################################################
@@ -10,15 +18,18 @@ async def usage():
     msg += "`url`: URL de la map.\n"
     return msg
 
-async def handleFind(bot, message):
-    if len(message.content.split(" ")) != 2:
-        error = "Nombre d'argument invalide!\n"
-        return error + await usage()
-
-    url = message.content.split(" ")[1]
+async def handle(bot, command, content):
+    url = content[1]
 
     for shortcut in bot.shortcuts:
         if bot.shortcuts[shortcut]["url"] == url:
-            return "Map: `" + bot.shortcuts[shortcut]["title"] + "` -> Alias: `" + shortcut + "`"
+            return "Map: `" + bot.shortcuts[shortcut]["title"] + "` -> Alias: `" + shortcut + "`", None
 
-    return "Cette map n'a pas encore été ajoutée, il est possible de l'jaouter avec la commande `!!add`."
+    return "Cette map n'a pas encore été ajoutée, il est possible de l'jaouter avec la commande `!!add`.", None
+
+command = Command.Command()
+command.emojis = [question]
+command.activation = "!!find"
+command.nbArgs = [2]
+command.usage = usage
+command.handle = handle
