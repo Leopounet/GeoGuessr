@@ -1,6 +1,6 @@
 # GeoGuessr challenge generator
 
-With that simple app you can generate as many GeoGuessr challenges as you want (given you have a premium account).
+With this simple app you can generate as many GeoGuessr challenges as you want (given you have a premium account).
 
 ## Dependencies
 
