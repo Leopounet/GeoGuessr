@@ -129,7 +129,7 @@ async def getTitle(driver):
     return None
 
 # Generates a URL to a challenge with a set duration
-async def generateMap(driver, url, duration):
+async def generateMap(bot, message, driver, url, duration):
 
     # If the URL is not valid
     if not await Utils.isValidURL(url):
@@ -158,13 +158,21 @@ async def generateMap(driver, url, duration):
     # Setup the challenge
     await setupChallenge(driver, duration)
 
-    msg = title 
-    msg += ": " + driver.find_element(By.XPATH, xpath_URL).get_attribute('value')
+    msg = title
+    challenge = driver.find_element(By.XPATH, xpath_URL).get_attribute('value')
+    msg += ": " + challenge
 
     if duration == 0:
-        msg += " temps illimité!"
+        duration = "temps illimité!"
+
+    if duration == 0:
+        msg += " " + duration
     else:
         msg += " " + str(duration) + " secondes par rounds!"
+
+    bot.archives[url] = {"title": title, "who": str(message.author), "duration":str(duration)}
+
+    bot.isWorking = False
     return msg, None
 
 async def handle(bot, command, message, content):
@@ -189,8 +197,7 @@ async def handle(bot, command, message, content):
         # Try to get an URL 5 times
         for _ in range(5):
             try:
-                bot.isWorking = False
-                return await generateMap(bot.driver, url, duration)
+                return await generateMap(bot, message, bot.driver, url, duration)
             except Exception as _:
                 pass
 

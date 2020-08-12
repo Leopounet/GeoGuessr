@@ -25,7 +25,7 @@ async def usage():
     msg += "`duration`: La durée d'un round.\n"
     return msg
 
-async def handleRandom(bot, command, message, content):
+async def handle(bot, command, message, content):
     keys = list(bot.shortcuts.keys())
 
     # Si il n'existe aucun shortcut
@@ -39,7 +39,7 @@ async def handleRandom(bot, command, message, content):
         duration = str(random.randint(minTime, maxTime))
 
     msg = "!!generate " + bot.shortcuts[random.choice(keys)]["url"].strip("\n") + " " + duration
-    return await Generate.handle(bot, Generate.command, msg.split(" "))
+    return await Generate.handle(bot, Generate.command, message, msg.split(" "))
 
 command = Command.Command()
 command.name = "RANDOM"
@@ -47,4 +47,4 @@ command.emojis = [thinking]
 command.activation = "!!random"
 command.nbArgs = [1, 2]
 command.usage = usage
-command.handle = handleRandom
+command.handle = handle

@@ -1,6 +1,6 @@
 import time
 import Utils
-import Generate, Add, ListShortcut, FindShortcut, RandomMap, Help
+import Generate, Add, ListShortcut, FindShortcut, RandomMap, Help, Archives, GenerateMultiple
 import os
 
 import discord
@@ -14,9 +14,6 @@ from selenium.webdriver.firefox.options import Options
 
 # Super secret token to control my bot
 TOKEN = os.environ["GEOGUESSR_TOKEN"]
-
-# Command list
-commands = []
 
 ###################################################################################################
 ###################################### BOT ########################################################
@@ -40,7 +37,7 @@ class MyClient(discord.Client):
         self.shortcuts = {}
 
         # List of command modules
-        self.modules = [Generate, Add, ListShortcut, FindShortcut, RandomMap, Help]
+        self.modules = [Generate, Add, ListShortcut, FindShortcut, RandomMap, Help, Archives, GenerateMultiple]
 
         # List of commands
         self.commands = []
@@ -49,6 +46,12 @@ class MyClient(discord.Client):
 
         # Help
         self.help = await self.buildHelp()
+
+        # Archives
+        self.archives = {}
+
+        # Max archives
+        self.maxArchives = 20
 
         # Log in
         await Generate.log(self.driver)
