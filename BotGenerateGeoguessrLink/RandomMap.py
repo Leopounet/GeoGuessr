@@ -33,8 +33,8 @@ async def handleRandom(bot, command, content):
         return "Aucun shortcut n'a été sauvegardé!"
 
     duration = "0"
-    if len(content) == 3:
-        duration = content[2]
+    if len(content) == 2:
+        duration = content[1]
     else:
         duration = str(random.randint(minTime, maxTime))
 
