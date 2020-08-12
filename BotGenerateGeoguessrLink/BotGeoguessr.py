@@ -82,7 +82,7 @@ class MyClient(discord.Client):
                     error = error + await command.usage()
                     await message.channel.send(error)
                 else:
-                    msg, embed = await command.handle(self, command, content)
+                    msg, embed = await command.handle(self, command, message, content)
                     await message.channel.send(msg, embed=embed)
 
 ###################################################################################################

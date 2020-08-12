@@ -17,7 +17,7 @@ async def usage():
     msg += "`!!list`\n"
     return msg
 
-async def handle(bot, command, content):
+async def handle(bot, command, message, content):
     msg = ""
 
     for shortcut in bot.shortcuts:

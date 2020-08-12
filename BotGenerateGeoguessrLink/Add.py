@@ -30,7 +30,7 @@ async def getTitle(bot):
         return None
     return None
 
-async def handle(bot, command, content):
+async def handle(bot, command, message, content):
     # url : name
     url = content[1]
     name = content[2]

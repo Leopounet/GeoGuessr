@@ -18,7 +18,7 @@ async def usage():
     msg += "`url`: URL de la map.\n"
     return msg
 
-async def handle(bot, command, content):
+async def handle(bot, command, message, content):
     url = content[1]
 
     for shortcut in bot.shortcuts:

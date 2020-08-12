@@ -17,7 +17,7 @@ async def usage():
     msg += "`!!help`\n"
     return msg
 
-async def handle(bot, command, content):
+async def handle(bot, command, message, content):
     return "", bot.help
 
 command = Command.Command()

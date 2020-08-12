@@ -167,7 +167,7 @@ async def generateMap(driver, url, duration):
         msg += " " + str(duration) + " secondes par rounds!"
     return msg, None
 
-async def handle(bot, command, content):
+async def handle(bot, command, message, content):
     if bot.isWorking == False:
         bot.isWorking = True
 

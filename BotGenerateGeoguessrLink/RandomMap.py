@@ -25,7 +25,7 @@ async def usage():
     msg += "`duration`: La durée d'un round.\n"
     return msg
 
-async def handleRandom(bot, command, content):
+async def handleRandom(bot, command, message, content):
     keys = list(bot.shortcuts.keys())
 
     # Si il n'existe aucun shortcut
