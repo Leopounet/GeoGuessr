@@ -1,0 +1,1 @@
+# Générateur de challenge GeoGuessr
