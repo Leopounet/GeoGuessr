@@ -1,6 +1,7 @@
 import time
 import Utils
 import Generate, Add, ListShortcut, FindShortcut, RandomMap, Help
+import os
 
 import discord
 
@@ -12,7 +13,7 @@ from selenium.webdriver.firefox.options import Options
 ###################################################################################################
 
 # Super secret token to control my bot
-TOKEN = 'TOKEN'
+TOKEN = os.environ["GEOGUESSR_TOKEN"]
 
 # Command list
 commands = []

@@ -1,4 +1,4 @@
-import time
+import time, os
 
 import Utils
 import Command
@@ -15,10 +15,10 @@ from selenium.webdriver import ActionChains
 loginPage = "https://www.geoguessr.com/signin"
 
 # My mail
-mail = "mail"
+mail = os.environ["MAIL"]
 
 # My password (ugh)
-password = "passdw"
+password = os.environ["PASSWD"]
 
 # XPATH LIST
 xpath_play = "/html/body/div/div/main/div/div/div[1]/div[3]/button"
