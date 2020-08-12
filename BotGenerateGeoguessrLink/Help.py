@@ -21,6 +21,7 @@ async def handle(bot, command, content):
     return "", bot.help
 
 command = Command.Command()
+command.name = "HELP"
 command.emojis = [thumbsup]
 command.activation = "!!help"
 command.nbArgs = [1]

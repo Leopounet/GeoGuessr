@@ -28,6 +28,7 @@ async def handle(bot, command, content):
     return "Cette map n'a pas encore été ajoutée, il est possible de l'jaouter avec la commande `!!add`.", None
 
 command = Command.Command()
+command.name = "FIND"
 command.emojis = [question]
 command.activation = "!!find"
 command.nbArgs = [2]

@@ -200,6 +200,7 @@ async def handle(bot, command, content):
         return error + await usage(), None
 
 command = Command.Command()
+command.name = "GENERATE"
 command.emojis = [ac, acc]
 command.activation = "!!generate"
 command.nbArgs = [2, 3]

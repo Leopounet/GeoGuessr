@@ -42,6 +42,7 @@ async def handleRandom(bot, command, content):
     return await Generate.handle(bot, Generate.command, msg.split(" "))
 
 command = Command.Command()
+command.name = "RANDOM"
 command.emojis = [thinking]
 command.activation = "!!random"
 command.nbArgs = [1, 2]

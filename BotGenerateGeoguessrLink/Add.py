@@ -65,6 +65,7 @@ async def handle(bot, command, content):
     return msg, None
 
 command = Command.Command()
+command.name = "ADD"
 command.emojis = [wcm]
 command.activation = "!!add"
 command.nbArgs = [3]

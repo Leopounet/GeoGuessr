@@ -29,6 +29,7 @@ async def handle(bot, command, content):
     return msg, None
 
 command = Command.Command()
+command.name = "LIST"
 command.emojis = [book]
 command.activation = "!!list"
 command.nbArgs = [1]
