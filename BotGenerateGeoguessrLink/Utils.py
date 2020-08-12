@@ -1,4 +1,4 @@
-import subprocess, time
+import subprocess, time, random
 
 from selenium.webdriver.common.by import By
 
@@ -20,6 +20,9 @@ sfile = "shortcuts.txt"
 
 # Shortcut delimiter
 sdelimiter = "$$$"
+
+# List of chars
+chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789="
 
 ###################################################################################################
 ###################################### METHODS ####################################################
@@ -77,3 +80,35 @@ async def saveShortcuts(bot):
             line += bot.shortcuts[shortcut]["title"] + sdelimiter 
             line += bot.shortcuts[shortcut]["url"] + "\n"
             f.write(line)
+
+async def generateRandomString(length):
+    res = ""
+    for _ in range(length):
+        res += random.choice(res)
+    return res
+
+class MyQueue:
+
+    def __init__(self, size):
+
+        # The list
+        self.queue = []
+
+        # The max size
+        self.size = size
+
+        # Current nb of elements
+        self.current = 0
+
+    def add(self, value):
+        if self.current < self.size:
+            self.queue.append(value)
+            self.current += 1
+        else:
+            self.queue = self.queue[1:]
+            self.queue.append(value)
+
+    def get(self, index):
+        if 0 <= index < self.current:
+            return self.queue[index]
+        return None

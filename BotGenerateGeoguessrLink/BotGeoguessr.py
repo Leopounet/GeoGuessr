@@ -47,11 +47,11 @@ class MyClient(discord.Client):
         # Help
         self.help = await self.buildHelp()
 
-        # Archives
-        self.archives = {}
-
         # Max archives
         self.maxArchives = 20
+
+        # Archives
+        self.archives = Utils.MyQueue(self.maxArchives)
 
         # Log in
         await Generate.log(self.driver)

@@ -35,15 +35,16 @@ async def handle(bot, command, message, content):
     if nb >= bot.maxArchives:
         nb = bot.maxArchives
 
-    for archive in bot.archives:
+    for archive in range(bot.archives.current):
         if nb == 0:
             break
-        msg += bot.archives[archive]["who"] + " requested " + bot.archives[archive]["title"]
-        msg += ": " + archive + " " + bot.archives[archive]["duration"] + "\n"
+        archive = bot.archives.get(bot.archives.current - archive - 1)
+        msg += archive["who"] + " requested " + archive["title"]
+        msg += ": " + archive["url"] + " " + archive["duration"] + "\n"
         nb -= 1
 
     if msg == "":
-        msg = "Aucune archive!"
+        return "Aucune archive!", None
 
     return msg, None
 

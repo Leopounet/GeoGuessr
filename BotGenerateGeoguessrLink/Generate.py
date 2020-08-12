@@ -159,7 +159,7 @@ async def generateMap(bot, message, driver, url, duration):
     await setupChallenge(driver, duration)
 
     msg = title
-    challenge = driver.find_element(By.XPATH, xpath_URL).get_attribute('value')
+    challenge = "<" + driver.find_element(By.XPATH, xpath_URL).get_attribute('value') + ">"
     msg += ": " + challenge
 
     if duration == 0:
@@ -170,7 +170,7 @@ async def generateMap(bot, message, driver, url, duration):
     else:
         msg += " " + str(duration) + " secondes par rounds!"
 
-    bot.archives[url] = {"title": title, "who": str(message.author), "duration":str(duration)}
+    bot.archives.add({"title": title, "who": str(message.author), "duration":str(duration), "url":challenge})
 
     bot.isWorking = False
     return msg, None
