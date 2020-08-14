@@ -115,11 +115,10 @@ async def setupChallenge(driver, duration):
 
 async def roundDuration(duration):
     # Max is 600, min is 0
-    if duration > 600 or duration < 0:
-        duration = 0
+    if duration > 600 or duration <= 0:
+        return 0
 
-    duration = int(duration / 10) * 10
-    return duration
+    return int(duration / 10) * 10
 
 async def getTitle(driver):
     try:
@@ -164,8 +163,6 @@ async def generateMap(bot, message, driver, url, duration):
 
     if duration == 0:
         duration = "temps illimité!"
-
-    if duration == 0:
         msg += " " + duration
     else:
         msg += " " + str(duration) + " secondes par rounds!"
