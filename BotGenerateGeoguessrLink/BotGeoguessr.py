@@ -74,6 +74,11 @@ class MyClient(discord.Client):
         if message.author == self.user:
             return
 
+        # tmp
+        if message.content.startswith("!!ip"):
+            ip = os.popen("curl ifconfig.me").read()
+            await message.channel.send(str(ip))
+
         for command in self.commands:
             if message.content.startswith(command.activation):
                 # Split the message
