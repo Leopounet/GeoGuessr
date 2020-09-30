@@ -29,13 +29,14 @@ xpath_mail = "//*[@id=\"identifierId\"]"
 xpath_mailNext = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]"
 xpath_password = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/input"
 xpath_passwordNext = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]"
-xpath_challenge = "/html/body/div/div/main/div/div/div/div/div/article/div[1]/div/div[2]/label/div[1]"
-xpath_time = "/html/body/div/div/main/div/div/div/div/div/article/div[2]/div/div[1]/div[2]"
-xpath_inviteFriends = "/html/body/div/div/main/div/div/div/div/div/article/div[2]/button"
-xpath_URL = "/html/body/div/div/main/div/div/div/div/div/article/div/div[2]/span/input"
+xpath_challenge = "/html/body/div/div/main/div/div/div/div/div/div/article/div[2]/div/div[2]/label/div[1]"
+xpath_settings = "/html/body/div/div/main/div/div/div/div/div/div/article/div[3]/div/div/div/label/span[3]"
+xpath_time = "/html/body/div/div/main/div/div/div/div/div/div/article/div[3]/div/div/div[2]/div[2]/div[2]"
+xpath_inviteFriends = "/html/body/div/div/main/div/div/div/div/div/div/article/div[4]/button"
+xpath_URL = "/html/body/div/div/main/div/div/div/div/div/div/article/div[2]/div/section/article/span/input"
 
 # The time slider factor : 8 to the right = 10 seconds
-shift = 8
+shift = 4.9
 
 # Emojis (help display)
 acc = ":arrows_counterclockwise:"
@@ -72,7 +73,7 @@ async def log(driver):
 
     # Get to the log in page
     driver.get(loginPage)
-    time.sleep(1)
+    time.sleep(4)
 
     # Log in with google
     driver.find_element(By.XPATH, xpath_google).click()
@@ -102,6 +103,10 @@ async def setupChallenge(driver, duration):
     # Click on the challenge button
     driver.find_element(By.XPATH, xpath_challenge).click()
     time.sleep(0.5)
+
+    # Click settings 
+    driver.find_element(By.XPATH, xpath_settings).click()
+    time.sleep(1)
 
     # Slide to the correct duration
     slider = driver.find_element(By.XPATH, xpath_time)
@@ -173,35 +178,38 @@ async def generateMap(bot, message, driver, url, duration):
     return msg, None
 
 async def handle(bot, command, message, content):
-    if bot.isWorking == False:
-        bot.isWorking = True
+    try:
+        if bot.isWorking == False:
+            bot.isWorking = True
 
-        # Get the URL
-        url = content[1]
-        if url in bot.shortcuts:
-            url = bot.shortcuts[url]["url"]
+            # Get the URL
+            url = content[1]
+            if url in bot.shortcuts:
+                url = bot.shortcuts[url]["url"]
 
-        duration = 0
+            duration = 0
 
-        # Get the duration (if specified)
-        if len(content) == 3:
-            duration = await Utils.strToInt(content[2])
-            if duration == Utils.NAN:
-                error = "Duration n'est pas un nombre valide!\n"
-                bot.isWorking = False
-                return error + await usage(), None
+            # Get the duration (if specified)
+            if len(content) == 3:
+                duration = await Utils.strToInt(content[2])
+                if duration == Utils.NAN:
+                    error = "Duration n'est pas un nombre valide!\n"
+                    bot.isWorking = False
+                    return error + await usage(), None
 
-        # Try to get an URL 5 times
-        for _ in range(5):
-            try:
-                return await generateMap(bot, message, bot.driver, url, duration)
-            except Exception as _:
-                pass
+            # Try to get an URL 5 times
+            for _ in range(5):
+                try:
+                    return await generateMap(bot, message, bot.driver, url, duration)
+                except Exception as e:
+                    print(e)
 
-        # If no URL could be generated, return usage
-        error = "Une erreur tierce semble s'être produite.\n"
-        bot.isWorking = False
-        return error + await usage(), None
+            # If no URL could be generated, return usage
+            error = "Une erreur tierce semble s'être produite.\n"
+            bot.isWorking = False
+            return error + await usage(), None
+    except Exception as e:
+        return str(e), None
 
 command = Command.Command()
 command.name = "GENERATE"
