@@ -37,12 +37,23 @@ xpath_time = "/html/body/div/div/main/div/div/div/div/div/div/article/div[3]/div
 xpath_inviteFriends = "/html/body/div/div/main/div/div/div/div/div/div/article/div[4]/button"
 xpath_URL = "/html/body/div/div/main/div/div/div/div/div/div/article/div[2]/div/section/article/span/input"
 
+xpath_country_challenge = "/html/body/div/div/main/div/div/div/div/div/div/div[2]/article/div[2]/div/div[2]/label/div[1]"
+xpath_country_settings = "/html/body/div/div/main/div/div/div/div/div/div/div[2]/article/div[3]/div/div/div[1]/label/span[1]"
+xpath_country_move = "/html/body/div/div/main/div/div/div/div/div/div/div[2]/article/div[3]/div/div/div[2]/div[3]/div/div[2]/div/label[1]/span"
+xpath_country_no_move = "/html/body/div/div/main/div/div/div/div/div/div/div[2]/article/div[3]/div/div/div[2]/div[3]/div/div[2]/div/label[2]/span"
+xpath_country_time = "/html/body/div/div/main/div/div/div/div/div/div/div[2]/article/div[3]/div/div/div[2]/div[2]/div[2]"
+xpath_country_inviteFriends = "/html/body/div/div/main/div/div/div/div/div/div/div[2]/article/div[4]/button"
+xpath_country_URL = "/html/body/div/div/main/div/div/div/div/div/div/div[2]/article/div[2]/div/section/article/span/input"
+
 # The time slider factor : 8 to the right = 10 seconds
 shift = 4.9
 
 # Emojis (help display)
 acc = ":arrows_counterclockwise:"
 ac = ":arrows_clockwise:"
+
+# url for country streak
+url_cs = "https://www.geoguessr.com/country-streak"
 
 # true strings
 true_strings = [
@@ -161,6 +172,40 @@ async def setupChallenge(driver, duration, no_move):
     driver.find_element(By.XPATH, xpath_inviteFriends).click()
     time.sleep(1)
 
+async def setupChallengeCountry(driver, duration, no_move):
+
+    # Click on the challenge button
+    driver.find_element(By.XPATH, xpath_country_challenge).click()
+    time.sleep(1)
+
+    # Have settings been clicked already?
+    try:
+        driver.find_element(By.XPATH, xpath_country_no_move)
+    except Exception as _:
+        # Click settings 
+        driver.find_element(By.XPATH, xpath_country_settings).click()
+        time.sleep(0.5)
+
+    # No move
+    if no_move:
+        driver.find_element(By.XPATH, xpath_country_no_move).click()
+        time.sleep(1)
+
+    else:
+        driver.find_element(By.XPATH, xpath_country_move).click()
+        time.sleep(1)
+
+    # Slide to the correct duration
+    slider = driver.find_element(By.XPATH, xpath_country_time)
+    move = ActionChains(driver)
+    move.click_and_hold(slider).move_by_offset(-100, 0).release().perform()
+    move.click_and_hold(slider).move_by_offset(int(duration / 10) * shift, 0).release().perform()
+    time.sleep(2)
+
+    # Get to the URL of the challenge
+    driver.find_element(By.XPATH, xpath_country_inviteFriends).click()
+    time.sleep(1)
+
 async def roundDuration(duration):
     # Max is 600, min is 0
     if duration > 600 or duration <= 0:
@@ -177,14 +222,21 @@ async def getTitle(driver):
 
 # Generates a URL to a challenge with a set duration
 async def generateMap(bot, message, driver, url, duration, no_move):
+    country = False
+
+    if url == "Country":
+        country = True
 
     # If the URL is not valid
-    if not await Utils.isValidURL(url):
+    elif not await Utils.isValidURL(url):
         error = "L'URL n'est pas valide!\n"
         return error + await usage(), None
 
     # Go to the URL
-    driver.get(url)
+    if not country:
+        driver.get(url)
+    else:
+        driver.get(url_cs)
     time.sleep(1)
 
     # If the bot is not logged in
@@ -192,21 +244,31 @@ async def generateMap(bot, message, driver, url, duration, no_move):
         await log(driver)
         driver.get(url)
         time.sleep(1)
-
+    
+    title = None
     # Get the name of the map to generate
-    title = await getTitle(driver)
-    if title == None:
-        error = "L'URL ne pointe pas vers une map GeoGuessr!\n"
-        return error + await usage(), None
+    if not country:
+        title = await getTitle(driver)
+        if title == None:
+            error = "L'URL ne pointe pas vers une map GeoGuessr!\n"
+            return error + await usage(), None
+    else:
+        title = "Country Streak"
 
     # Round the duration to a valid number of seconds
     duration = await roundDuration(duration)
 
     # Setup the challenge
-    await setupChallenge(driver, duration, no_move)
+    if not country:
+        await setupChallenge(driver, duration, no_move)
+    else:
+        await setupChallengeCountry(driver, duration, no_move)
 
     msg = title
-    challenge = "<" + driver.find_element(By.XPATH, xpath_URL).get_attribute('value') + ">"
+    if not country:
+        challenge = "<" + driver.find_element(By.XPATH, xpath_URL).get_attribute('value') + ">"
+    else:
+        challenge = "<" + driver.find_element(By.XPATH, xpath_country_URL).get_attribute('value') + ">"
     msg += ": " + challenge
 
     if duration == 0:
@@ -230,6 +292,7 @@ async def handle(bot, command, message, content):
 
             # Get the URL
             url = content[1]
+
             if url in bot.shortcuts:
                 url = bot.shortcuts[url]["url"]
 
