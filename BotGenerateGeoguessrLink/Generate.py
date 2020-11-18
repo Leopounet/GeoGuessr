@@ -87,7 +87,7 @@ async def log(driver):
         driver.find_element(By.XPATH, xpath_mail).send_keys(mail)
         driver.find_element(By.XPATH, xpath_mailNext).click()
 
-        time.sleep(1)
+        time.sleep(3)
         driver.find_element(By.XPATH, xpath_password).send_keys(password)
         driver.find_element(By.XPATH, xpath_passwordNext).click()
         driver.switch_to.window(driver.window_handles[0])
@@ -98,11 +98,11 @@ async def log(driver):
 async def setupChallenge(driver, duration):
     # Click on the play button
     driver.find_element(By.XPATH, xpath_play).click()
-    time.sleep(0.5)
+    time.sleep(1)
 
     # Click on the challenge button
     driver.find_element(By.XPATH, xpath_challenge).click()
-    time.sleep(0.5)
+    time.sleep(1)
 
     # Click settings 
     driver.find_element(By.XPATH, xpath_settings).click()
@@ -116,7 +116,7 @@ async def setupChallenge(driver, duration):
 
     # Get to the URL of the challenge
     driver.find_element(By.XPATH, xpath_inviteFriends).click()
-    time.sleep(0.5)
+    time.sleep(1)
 
 async def roundDuration(duration):
     # Max is 600, min is 0
