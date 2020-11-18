@@ -1,6 +1,6 @@
 import time
 import Utils
-import Generate, Add, ListShortcut, FindShortcut, RandomMap, Help, Archives, GenerateMultiple
+import Generate, Add, Remove, ListShortcut, FindShortcut, RandomMap, Help, Archives, GenerateMultiple
 import os
 
 import discord
@@ -37,7 +37,17 @@ class MyClient(discord.Client):
         self.shortcuts = {}
 
         # List of command modules
-        self.modules = [Generate, Add, ListShortcut, FindShortcut, RandomMap, Help, Archives, GenerateMultiple]
+        self.modules = [
+                            Generate, 
+                            Add, 
+                            Remove, 
+                            ListShortcut, 
+                            FindShortcut, 
+                            RandomMap, 
+                            Help, 
+                            Archives, 
+                            GenerateMultiple
+                        ]
 
         # List of commands
         self.commands = []

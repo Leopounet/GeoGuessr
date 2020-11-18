@@ -31,6 +31,8 @@ xpath_password = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/
 xpath_passwordNext = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]"
 xpath_challenge = "/html/body/div/div/main/div/div/div/div/div/div/article/div[2]/div/div[2]/label/div[1]"
 xpath_settings = "/html/body/div/div/main/div/div/div/div/div/div/article/div[3]/div/div/div/label/span[3]"
+xpath_move = "/html/body/div/div/main/div/div/div/div/div/div/article/div[3]/div/div/div[2]/div[3]/div/div[2]/div/label[1]/span"
+xpath_no_move = "/html/body/div/div/main/div/div/div/div/div/div/article/div[3]/div/div/div[2]/div[3]/div/div[2]/div/label[2]/span"
 xpath_time = "/html/body/div/div/main/div/div/div/div/div/div/article/div[3]/div/div/div[2]/div[2]/div[2]"
 xpath_inviteFriends = "/html/body/div/div/main/div/div/div/div/div/div/article/div[4]/button"
 xpath_URL = "/html/body/div/div/main/div/div/div/div/div/div/article/div[2]/div/section/article/span/input"
@@ -42,15 +44,42 @@ shift = 4.9
 acc = ":arrows_counterclockwise:"
 ac = ":arrows_clockwise:"
 
+# true strings
+true_strings = [
+    "true",
+    "t",
+    "y",
+    "yes",
+    "Yes",
+    "Y",
+    "T",
+    "True",
+    "Oui",
+    "O",
+    "1",
+    "V",
+    "v",
+    "Vrai",
+    "vrai"
+]
+
+no_move_strings = [
+    "nm",
+    "no-move",
+    "no-mv",
+    "nmv"
+]
+
 ###################################################################################################
 ###################################### METHODS ####################################################
 ###################################################################################################
 
 async def usage():
     msg = "Génère un challenge pour une map spécifiée.\n"
-    msg += "`!!generate <map_url> [duration]`\n"
+    msg += "`!!generate <map_url> [duration] [no-move]`\n"
     msg += "`map_url`: Url vers la map à générer (peut aussi être un shortcut).\n"
-    msg += "`duration` (opt): Durée d'un round en secondes.\n"
+    msg += "`duration`: (opt): Durée d'un round en secondes ou au format min:sec.\n"
+    msg += "`no-move`: True (ou un alias valide) pour jouer en no move.\n"
     return msg
 
 # True if the bot is already logged in GeoGuessr
@@ -95,7 +124,7 @@ async def log(driver):
         # Required wait (going too fast breaks selenium)
         time.sleep(10)
 
-async def setupChallenge(driver, duration):
+async def setupChallenge(driver, duration, no_move):
     # Click on the play button
     driver.find_element(By.XPATH, xpath_play).click()
     time.sleep(1)
@@ -104,13 +133,27 @@ async def setupChallenge(driver, duration):
     driver.find_element(By.XPATH, xpath_challenge).click()
     time.sleep(1)
 
-    # Click settings 
-    driver.find_element(By.XPATH, xpath_settings).click()
-    time.sleep(1)
+    # Have settings been clicked already?
+    try:
+        driver.find_element(By.XPATH, xpath_no_move)
+    except Exception as _:
+        # Click settings 
+        driver.find_element(By.XPATH, xpath_settings).click()
+        time.sleep(0.5)
+
+    # No move
+    if no_move:
+        driver.find_element(By.XPATH, xpath_no_move).click()
+        time.sleep(1)
+
+    else:
+        driver.find_element(By.XPATH, xpath_move).click()
+        time.sleep(1)
 
     # Slide to the correct duration
     slider = driver.find_element(By.XPATH, xpath_time)
     move = ActionChains(driver)
+    move.click_and_hold(slider).move_by_offset(-100, 0).release().perform()
     move.click_and_hold(slider).move_by_offset(int(duration / 10) * shift, 0).release().perform()
     time.sleep(2)
 
@@ -133,7 +176,7 @@ async def getTitle(driver):
     return None
 
 # Generates a URL to a challenge with a set duration
-async def generateMap(bot, message, driver, url, duration):
+async def generateMap(bot, message, driver, url, duration, no_move):
 
     # If the URL is not valid
     if not await Utils.isValidURL(url):
@@ -160,7 +203,7 @@ async def generateMap(bot, message, driver, url, duration):
     duration = await roundDuration(duration)
 
     # Setup the challenge
-    await setupChallenge(driver, duration)
+    await setupChallenge(driver, duration, no_move)
 
     msg = title
     challenge = "<" + driver.find_element(By.XPATH, xpath_URL).get_attribute('value') + ">"
@@ -171,6 +214,9 @@ async def generateMap(bot, message, driver, url, duration):
         msg += " " + duration
     else:
         msg += " " + str(duration) + " secondes par rounds!"
+
+    if no_move:
+        msg += " (no move)"
 
     bot.archives.add({"title": title, "who": str(message.author), "duration":str(duration), "url":challenge})
 
@@ -188,19 +234,25 @@ async def handle(bot, command, message, content):
                 url = bot.shortcuts[url]["url"]
 
             duration = 0
+            no_move = False
 
             # Get the duration (if specified)
-            if len(content) == 3:
-                duration = await Utils.strToInt(content[2])
+            if len(content) >= 3:
+                duration = await Utils.timeToInt(content[2])
                 if duration == Utils.NAN:
                     error = "Duration n'est pas un nombre valide!\n"
                     bot.isWorking = False
                     return error + await usage(), None
 
+            if len(content) >= 4:
+                no_move_cont = content[3]
+                if no_move_cont in true_strings or no_move_cont in no_move_strings:
+                    no_move = True
+
             # Try to get an URL 5 times
             for _ in range(5):
                 try:
-                    return await generateMap(bot, message, bot.driver, url, duration)
+                    return await generateMap(bot, message, bot.driver, url, duration, no_move)
                 except Exception as e:
                     print(e)
 
@@ -215,6 +267,6 @@ command = Command.Command()
 command.name = "GENERATE"
 command.emojis = [ac, acc]
 command.activation = "!!generate"
-command.nbArgs = [2, 3]
+command.nbArgs = [2, 4]
 command.usage = usage
 command.handle = handle

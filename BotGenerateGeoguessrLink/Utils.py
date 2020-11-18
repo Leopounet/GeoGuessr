@@ -47,6 +47,18 @@ async def strToInt(value):
         return NAN
     return NAN
 
+async def timeToInt(value):
+    try:
+        if ":" in value:
+            value = value.split(":")
+            minutes = value[0]
+            seconds = value[1]
+            return int(minutes) * 60 + int(seconds)
+        return int(value)
+    except Exception as _:
+        return NAN
+    return NAN
+
 # Checks if a given URL is valid
 async def isValidURL(url):
     output, _ = execute("curl --head -s " + url)
