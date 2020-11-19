@@ -1,6 +1,8 @@
 import time
 import Command
 
+from CommandReturn import CommandReturn, ErrorType
+
 ###################################################################################################
 ###################################### VARIABLES ##################################################
 ###################################################################################################
@@ -26,11 +28,11 @@ async def handle(bot, command, message, content):
         nb = int(content[1])
     except:
         error = "Nombre d'archives invalide!"
-        return error + await usage(), None
+        return CommandReturn(error + await usage(), None, ErrorType.InvalidNumberError)
 
     if nb < 0:
         error = "N max: " + str(bot.maxArchives)
-        return error + await usage(), None
+        return CommandReturn(error + await usage(), None, ErrorType.InvalidNumberError)
 
     if nb >= bot.maxArchives:
         nb = bot.maxArchives
@@ -44,9 +46,9 @@ async def handle(bot, command, message, content):
         nb -= 1
 
     if msg == "":
-        return "Aucune archive!", None
+        msg = "Aucune archive!"
 
-    return msg, None
+    return CommandReturn(msg)
 
 command = Command.Command()
 command.name = "ARCHIVE"

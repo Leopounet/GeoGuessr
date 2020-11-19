@@ -1,6 +1,8 @@
 import time
 import Command
 
+from CommandReturn import CommandReturn, ErrorType
+
 ###################################################################################################
 ###################################### VARIABLES ##################################################
 ###################################################################################################
@@ -18,7 +20,7 @@ async def usage():
     return msg
 
 async def handle(bot, command, message, content):
-    return "", bot.help
+    return CommandReturn("", bot.help)
 
 command = Command.Command()
 command.name = "HELP"

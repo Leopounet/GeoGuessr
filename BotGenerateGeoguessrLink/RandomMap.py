@@ -3,6 +3,8 @@ import Command
 import random
 import Generate
 
+from CommandReturn import CommandReturn, ErrorType
+
 ###################################################################################################
 ###################################### VARIABLES ##################################################
 ###################################################################################################
@@ -30,7 +32,8 @@ async def handle(bot, command, message, content):
 
     # Si il n'existe aucun shortcut
     if len(keys) == 0:
-        return "Aucun shortcut n'a été sauvegardé!"
+        msg = "Aucun shortcut n'a été sauvegardé!"
+        return CommandReturn(msg)
 
     duration = "0"
     if len(content) == 2:

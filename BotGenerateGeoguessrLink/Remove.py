@@ -3,6 +3,8 @@ import time
 import Utils
 import Command
 
+from CommandReturn import CommandReturn, ErrorType
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
@@ -29,14 +31,14 @@ async def handle(bot, command, message, content):
 
     if not name in bot.shortcuts:
         error = "Le shortcut n'existe pas!\n"
-        return error + await usage(), None
+        return CommandReturn(error + await usage(), None, ErrorType.ShortcutError)
 
     del bot.shortcuts[name]
     msg = "Le raccourci " + name + " a été supprimé!\n"
 
     await Utils.saveShortcuts(bot)
 
-    return msg, None
+    return CommandReturn(msg)
 
 command = Command.Command()
 command.name = "REMOVE"

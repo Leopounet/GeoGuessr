@@ -2,6 +2,7 @@ import time
 
 import Utils
 import Command
+from CommandReturn import CommandReturn, ErrorType
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -38,11 +39,11 @@ async def handle(bot, command, message, content):
     # If the name is already used or the url is invalid
     if not await Utils.isValidURL(url):
         error = "L'URL n'est pas valide!\n"
-        return error + await usage(), None
+        return CommandReturn(error + await usage(), None, ErrorType.UrlError)
 
     if name in bot.shortcuts:
         error = "Le shortcut est déjà utilisé!\n"
-        return error + await usage(), None
+        return CommandReturn(error + await usage(), None, ErrorType.ShortcutError)
 
     # Go to the challenge page
     bot.driver.get(url)
@@ -53,7 +54,7 @@ async def handle(bot, command, message, content):
     # If the url is not a map
     if title == None:
         error = "L'URL ne pointe pas vers une map GeoGuessr!\n"
-        return error + await usage(), None
+        return CommandReturn(error + await usage(), None, ErrorType.NotAMapError)
 
     bot.shortcuts[name] = {"title": title, "url": url.strip("\n")}
 
@@ -62,7 +63,7 @@ async def handle(bot, command, message, content):
 
     await Utils.saveShortcuts(bot)
 
-    return msg, None
+    return CommandReturn(msg)
 
 command = Command.Command()
 command.name = "ADD"

@@ -1,6 +1,8 @@
 import time
 import Command
 
+from CommandReturn import CommandReturn, ErrorType
+
 ###################################################################################################
 ###################################### VARIABLES ##################################################
 ###################################################################################################
@@ -20,12 +22,16 @@ async def usage():
 
 async def handle(bot, command, message, content):
     url = content[1]
+    msg = ""
 
     for shortcut in bot.shortcuts:
-        if bot.shortcuts[shortcut]["url"] == url:
-            return "Map: `" + bot.shortcuts[shortcut]["title"] + "` -> Alias: `" + shortcut + "`", None
+        if bot.shortcuts[shortcut]["url"][:-1] == url:
+            msg = "Map: `" + bot.shortcuts[shortcut]["title"] + "` -> Alias: `" + shortcut + "`"
 
-    return "Cette map n'a pas encore été ajoutée, il est possible de l'jaouter avec la commande `!!add`.", None
+    if msg == "":
+        msg = "Cette map n'a pas encore été ajoutée, il est possible de l'jaouter avec la commande `!!add`."
+
+    return CommandReturn(msg)
 
 command = Command.Command()
 command.name = "FIND"

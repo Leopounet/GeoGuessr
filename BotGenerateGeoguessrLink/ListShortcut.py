@@ -1,6 +1,8 @@
 import time
 import Command
 
+from CommandReturn import CommandReturn, ErrorType
+
 ###################################################################################################
 ###################################### VARIABLES ##################################################
 ###################################################################################################
@@ -26,7 +28,7 @@ async def handle(bot, command, message, content):
     if msg == "":
         msg = "Aucun shortcut n'a été ajouté pour l'instant!"
 
-    return msg, None
+    return CommandReturn(msg)
 
 command = Command.Command()
 command.name = "LIST"

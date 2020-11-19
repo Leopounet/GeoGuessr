@@ -3,6 +3,8 @@ import Utils
 import Generate, Add, Remove, ListShortcut, FindShortcut, RandomMap, Help, Archives, GenerateMultiple
 import os
 
+import CommandReturn
+
 import discord
 
 from selenium import webdriver
@@ -80,28 +82,32 @@ class MyClient(discord.Client):
         return help
 
     async def on_message(self, message):
-        # don't respond to ourselves
-        if message.author == self.user:
-            return
+        try:
+            # don't respond to ourselves
+            if message.author == self.user:
+                return
 
-        # tmp
-        if message.content.startswith("!!ip"):
-            ip = os.popen("curl ifconfig.me").read()
-            await message.channel.send(str(ip))
+            # tmp
+            if message.content.startswith("!!ip"):
+                ip = os.popen("curl ifconfig.me").read()
+                await message.channel.send(str(ip))
 
-        for command in self.commands:
-            if message.content.startswith(command.activation):
-                # Split the message
-                content = message.content.split(" ")
+            for command in self.commands:
+                if message.content.startswith(command.activation):
+                    # Split the message
+                    content = message.content.split(" ")
 
-                # If not enough arguments
-                if not await command.isNbArgsCorrect(content):
-                    error = "Nombre d'argument invalide!\n"
-                    error = error + await command.usage()
-                    await message.channel.send(error)
-                else:
-                    msg, embed = await command.handle(self, command, message, content)
-                    await message.channel.send(msg, embed=embed)
+                    # If not enough arguments
+                    if not await command.isNbArgsCorrect(content):
+                        error = "Nombre d'argument invalide!\n"
+                        error = error + await command.usage()
+                        await message.channel.send(error)
+                    else:
+                        res = await command.handle(self, command, message, content)
+                        await message.channel.send(res.msg, embed=res.embed)
+        except Exception as e:
+            print(e)
+            self.isWorking = False
 
 ###################################################################################################
 ###################################### MAIN #######################################################
