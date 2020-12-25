@@ -148,6 +148,7 @@ async def setupChallenge(driver, duration, no_move):
     try:
         get_element(driver, xpath_play, 1).click()
     except Exception as _:
+        time.sleep(1)
         get_element(driver, xpath_play_bis, 1).click()
 
     # Click on the challenge button
