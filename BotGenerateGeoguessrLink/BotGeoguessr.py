@@ -27,7 +27,7 @@ class MyClient(discord.Client):
     async def on_ready(self):
         # Options to use to run firefox
         options = Options()
-        options.headless = False
+        options.headless = True
 
         # Firefox
         self.driver = webdriver.Firefox(options=options)
