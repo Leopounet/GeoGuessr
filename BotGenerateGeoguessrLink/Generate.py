@@ -117,7 +117,7 @@ async def isLogged(driver):
 
 def get_element(driver, xpath, max_timeout=5):
     element = WebDriverWait(driver, max_timeout).until(EC.presence_of_element_located((By.XPATH, xpath)))
-    time.sleep(0.1)
+    time.sleep(0.5)
     return element
 
 # Log in GeoGuessr
