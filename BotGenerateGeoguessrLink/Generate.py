@@ -23,7 +23,8 @@ mail = os.environ["MAIL"]
 password = os.environ["PASSWD"]
 
 # XPATH LIST
-xpath_play = "/html/body/div/div/main/div/div/div[1]/div[4]/button"
+xpath_play = "/html/body/div/div/main/div/div/div[1]/div[3]/button"
+xpath_play_bis = "/html/body/div/div/main/div/div/div[1]/div[4]/button"
 xpath_createAccount = "/html/body/div/section/div/div[2]/button[2]"
 xpath_signIn = "/html/body/div[1]/div/div/header/div[2]/div/div[1]/a"
 xpath_google = "/html/body/div[1]/div/main/div/div/div/div/div/section/div/div[2]/button"
@@ -139,7 +140,10 @@ async def log(driver):
 
 async def setupChallenge(driver, duration, no_move):
     # Click on the play button
-    driver.find_element(By.XPATH, xpath_play).click()
+    try:
+        driver.find_element(By.XPATH, xpath_play).click()
+    except Exception as _:
+        driver.find_element(By.XPATH, xpath_play_bis).click()
     time.sleep(2)
 
     # Click on the challenge button
