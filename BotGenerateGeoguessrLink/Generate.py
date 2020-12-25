@@ -8,6 +8,8 @@ from CommandReturn import CommandReturn, ErrorType
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 ###################################################################################################
 ###################################### VARIABLES ##################################################
@@ -84,6 +86,8 @@ no_move_strings = [
     "nmv"
 ]
 
+max_timeout = 5
+
 ###################################################################################################
 ###################################### METHODS ####################################################
 ###################################################################################################
@@ -111,106 +115,94 @@ async def isLogged(driver):
             return True
     return False
 
+def get_element(driver, xpath, max_timeout=5):
+    element = WebDriverWait(driver, max_timeout).until(EC.presence_of_element_located((By.XPATH, xpath)))
+    time.sleep(0.1)
+    return element
+
 # Log in GeoGuessr
 async def log(driver):
 
     # Get to the log in page
     driver.get(loginPage)
-    time.sleep(4)
+
+    time.sleep(1)
 
     # Log in with google
-    driver.find_element(By.XPATH, xpath_google).click()
-    time.sleep(2)
+    get_element(driver, xpath_google).click()
     
     # If everything is working fine, a new window has been opened
     if len(driver.window_handles) > 1:
 
         # Log in
         driver.switch_to.window(driver.window_handles[1])
-        driver.find_element(By.XPATH, xpath_mail).send_keys(mail)
-        driver.find_element(By.XPATH, xpath_mailNext).click()
+        get_element(driver, xpath_mail).send_keys(mail)
+        get_element(driver, xpath_mailNext).click()
 
-        time.sleep(3)
-        driver.find_element(By.XPATH, xpath_password).send_keys(password)
-        driver.find_element(By.XPATH, xpath_passwordNext).click()
+        get_element(driver, xpath_password).send_keys(password)
+        get_element(driver, xpath_passwordNext).click()
         driver.switch_to.window(driver.window_handles[0])
-
-        # Required wait (going too fast breaks selenium)
-        time.sleep(10)
 
 async def setupChallenge(driver, duration, no_move):
     # Click on the play button
     try:
-        driver.find_element(By.XPATH, xpath_play).click()
+        get_element(driver, xpath_play, 1).click()
     except Exception as _:
-        driver.find_element(By.XPATH, xpath_play_bis).click()
-    time.sleep(2)
+        get_element(driver, xpath_play_bis, 1).click()
 
     # Click on the challenge button
-    driver.find_element(By.XPATH, xpath_challenge).click()
-    time.sleep(2)
+    get_element(driver, xpath_challenge).click()
 
     # Have settings been clicked already?
     try:
         driver.find_element(By.XPATH, xpath_no_move)
     except Exception as _:
         # Click settings 
-        driver.find_element(By.XPATH, xpath_settings).click()
-    time.sleep(2)
+        get_element(driver, xpath_settings).click()
 
     # No move
     if no_move:
-        driver.find_element(By.XPATH, xpath_no_move).click()
+        get_element(driver, xpath_no_move).click()
 
     else:
-        driver.find_element(By.XPATH, xpath_move).click()
-    
-    time.sleep(2)
+        get_element(driver, xpath_move).click()
 
     # Slide to the correct duration
-    slider = driver.find_element(By.XPATH, xpath_time)
+    slider = get_element(driver, xpath_time)
     move = ActionChains(driver)
     move.click_and_hold(slider).move_by_offset(-100, 0).release().perform()
     move.click_and_hold(slider).move_by_offset(int(duration / 10) * shift, 0).release().perform()
-    time.sleep(2)
 
     # Get to the URL of the challenge
-    driver.find_element(By.XPATH, xpath_inviteFriends).click()
-    time.sleep(2)
+    get_element(driver, xpath_inviteFriends).click()
 
 async def setupChallengeCountry(driver, duration, no_move):
 
     # Click on the challenge button
-    driver.find_element(By.XPATH, xpath_country_challenge).click()
-    time.sleep(1)
+    get_element(driver, xpath_country_challenge).click()
 
     # Have settings been clicked already?
     try:
         driver.find_element(By.XPATH, xpath_country_no_move)
     except Exception as _:
         # Click settings 
-        driver.find_element(By.XPATH, xpath_country_settings).click()
-        time.sleep(0.5)
+        get_element(driver, xpath_country_settings).click()
 
     # No move
     if no_move:
-        driver.find_element(By.XPATH, xpath_country_no_move).click()
-        time.sleep(1)
+        get_element(driver, xpath_country_no_move).click()
 
     else:
-        driver.find_element(By.XPATH, xpath_country_move).click()
-        time.sleep(1)
+        get_element(driver, xpath_country_move).click()
 
     # Slide to the correct duration
-    slider = driver.find_element(By.XPATH, xpath_country_time)
+    slider = get_element(driver, xpath_country_time)
     move = ActionChains(driver)
     move.click_and_hold(slider).move_by_offset(-100, 0).release().perform()
     move.click_and_hold(slider).move_by_offset(int(duration / 10) * shift, 0).release().perform()
-    time.sleep(2)
 
     # Get to the URL of the challenge
-    driver.find_element(By.XPATH, xpath_country_inviteFriends).click()
-    time.sleep(1)
+    get_element(driver, xpath_country_inviteFriends).click()
 
 async def roundDuration(duration):
     # Max is 600, min is 0
@@ -243,13 +235,11 @@ async def generateMap(bot, message, driver, url, duration, no_move):
         driver.get(url)
     else:
         driver.get(url_cs)
-    time.sleep(2)
 
     # If the bot is not logged in
     if not await isLogged(driver):
         await log(driver)
         driver.get(url)
-        time.sleep(2)
     
     title = None
     # Get the name of the map to generate
@@ -260,8 +250,6 @@ async def generateMap(bot, message, driver, url, duration, no_move):
             return CommandReturn(error + await usage(), None, ErrorType.NotAMapError)
     else:
         title = "Country Streak"
-
-    time.sleep(2)
 
     # Round the duration to a valid number of seconds
     duration = await roundDuration(duration)
@@ -274,9 +262,9 @@ async def generateMap(bot, message, driver, url, duration, no_move):
 
     msg = title
     if not country:
-        challenge = "<" + driver.find_element(By.XPATH, xpath_URL).get_attribute('value') + ">"
+        challenge = "<" +get_element(driver, xpath_URL).get_attribute('value') + ">"
     else:
-        challenge = "<" + driver.find_element(By.XPATH, xpath_country_URL).get_attribute('value') + ">"
+        challenge = "<" + get_element(driver, xpath_country_URL).get_attribute('value') + ">"
     msg += ": " + challenge
 
     if duration == 0:
