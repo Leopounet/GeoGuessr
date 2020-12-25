@@ -140,11 +140,11 @@ async def log(driver):
 async def setupChallenge(driver, duration, no_move):
     # Click on the play button
     driver.find_element(By.XPATH, xpath_play).click()
-    time.sleep(1)
+    time.sleep(2)
 
     # Click on the challenge button
     driver.find_element(By.XPATH, xpath_challenge).click()
-    time.sleep(1)
+    time.sleep(2)
 
     # Have settings been clicked already?
     try:
@@ -152,16 +152,16 @@ async def setupChallenge(driver, duration, no_move):
     except Exception as _:
         # Click settings 
         driver.find_element(By.XPATH, xpath_settings).click()
-        time.sleep(0.5)
+    time.sleep(2)
 
     # No move
     if no_move:
         driver.find_element(By.XPATH, xpath_no_move).click()
-        time.sleep(1)
 
     else:
         driver.find_element(By.XPATH, xpath_move).click()
-        time.sleep(1)
+    
+    time.sleep(2)
 
     # Slide to the correct duration
     slider = driver.find_element(By.XPATH, xpath_time)
@@ -172,7 +172,7 @@ async def setupChallenge(driver, duration, no_move):
 
     # Get to the URL of the challenge
     driver.find_element(By.XPATH, xpath_inviteFriends).click()
-    time.sleep(1)
+    time.sleep(2)
 
 async def setupChallengeCountry(driver, duration, no_move):
 
@@ -239,13 +239,13 @@ async def generateMap(bot, message, driver, url, duration, no_move):
         driver.get(url)
     else:
         driver.get(url_cs)
-    time.sleep(1)
+    time.sleep(2)
 
     # If the bot is not logged in
     if not await isLogged(driver):
         await log(driver)
         driver.get(url)
-        time.sleep(1)
+        time.sleep(2)
     
     title = None
     # Get the name of the map to generate
@@ -256,6 +256,8 @@ async def generateMap(bot, message, driver, url, duration, no_move):
             return CommandReturn(error + await usage(), None, ErrorType.NotAMapError)
     else:
         title = "Country Streak"
+
+    time.sleep(2)
 
     # Round the duration to a valid number of seconds
     duration = await roundDuration(duration)
