@@ -15,7 +15,7 @@ thumbsup = ":thumbsup:"
 ###################################################################################################
 
 async def usage():
-    msg = "Affiche cette aide.\n"
+    msg = "Prints this help.\n"
     msg += "`!!help`\n"
     return msg
 

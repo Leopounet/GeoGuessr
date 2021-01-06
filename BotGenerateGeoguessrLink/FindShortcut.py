@@ -15,9 +15,9 @@ question = ":question:"
 ###################################################################################################
 
 async def usage():
-    msg = "Retourne l'alias lié à cet URL (si existant).\n"
+    msg = "Prints the name of the shortcut bound to this map (if it exists).\n"
     msg += "`!!find <url>`\n"
-    msg += "`url`: URL de la map.\n"
+    msg += "`url`: URL to the map.\n"
     return msg
 
 async def handle(bot, command, message, content):
@@ -29,7 +29,7 @@ async def handle(bot, command, message, content):
             msg = "Map: `" + bot.shortcuts[shortcut]["title"] + "` -> Alias: `" + shortcut + "`"
 
     if msg == "":
-        msg = "Cette map n'a pas encore été ajoutée, il est possible de l'jaouter avec la commande `!!add`."
+        msg = "This URL has no nickname (shortcut) yet, you can add it by using `!!add`."
 
     return CommandReturn(msg)
 

@@ -18,10 +18,10 @@ wcm = ":white_check_mark:"
 ###################################################################################################
 
 async def usage():
-    msg = "Lie une URL à un nom (shortcut). Au lieu d'utiliser l'URL vous pouvez utiliser le shortcut.\n"
+    msg = "Binds a URL to a nickname (shortcut). Instead of using the URL, allows to type `!!generate <shortcut>`.\n"
     msg += "`!!add <url> <shortcut>`\n"
-    msg += "`url`: URL de la map.\n"
-    msg += "`shortcut`: L'alias utilisable à la place de l'URL."
+    msg += "`url`: URL of the map.\n"
+    msg += "`shortcut`: The nickname of the URL (shortcut)."
     return msg
 
 async def getTitle(bot):
@@ -38,11 +38,11 @@ async def handle(bot, command, message, content):
 
     # If the name is already used or the url is invalid
     if not await Utils.isValidURL(url):
-        error = "L'URL n'est pas valide!\n"
+        error = "URL is invalid!\n"
         return CommandReturn(error + await usage(), None, ErrorType.UrlError)
 
     if name in bot.shortcuts:
-        error = "Le shortcut est déjà utilisé!\n"
+        error = "This nickname (shortcut) is already used!\n"
         return CommandReturn(error + await usage(), None, ErrorType.ShortcutError)
 
     # Go to the challenge page
@@ -53,13 +53,13 @@ async def handle(bot, command, message, content):
 
     # If the url is not a map
     if title == None:
-        error = "L'URL ne pointe pas vers une map GeoGuessr!\n"
+        error = "The URL does not lead to a valid Geoguessr map!\n"
         return CommandReturn(error + await usage(), None, ErrorType.NotAMapError)
 
     bot.shortcuts[name] = {"title": title, "url": url.strip("\n")}
 
-    msg = "Le raccourci " + name + " vers la map " + title + " a été ajouté!\n"
-    msg += "Il est à présent possible de taper `!!generate " + name + " [duration]` pour générer une map " + title + " !"
+    msg = "The shortcut " + name + " has been successfully bound the map " + title + "!\n"
+    msg += "It now possible to type `!!generate " + name + " [duration]` to generate a map: " + title + " !"
 
     await Utils.saveShortcuts(bot)
 

@@ -18,12 +18,12 @@ ac = ":arrows_clockwise:"
 ###################################################################################################
 
 async def usage():
-    msg = "Génère N fois la map demandée.\n"
+    msg = "Generates N times the requested map.\n"
     msg += "`!!+generate <N> [map_url] [duration] [no-move`\n"
-    msg += "`N`: Le nombre de maps à générer.\n"
-    msg += "`map_url` (opt): Url vers la map à générer (peut aussi être un shortcut). Si non précisé, random.\n"
-    msg += "`duration` (opt): Durée d'un round en secondes ou au format min:sec.\n"
-    msg += "`no-move` (opt): True (ou un alias valide) pour jouer en no move.\n"
+    msg += "`N`: The number of maps to generate.\n"
+    msg += "`map_url` (opt): URL to the map to generate (or a nickname/shortcut). If none is specified this will be random.\n"
+    msg += "`duration` (opt): Duration of a round min:sec.\n"
+    msg += "`no-move` (opt): Set it to True (or any valid alias) to disable movement.\n"
     return msg
 
 async def handle(bot, command, message, content):
@@ -33,7 +33,7 @@ async def handle(bot, command, message, content):
     try:
         nb = int(content[1])
     except Exception as _:
-        error = "N n'est pas une valeur valide!"
+        error = "Invalid number of maps to generate!"
         return CommandReturn(error + await usage(), None, ErrorType.InvalidNumberError)
 
     if len(content) == 2:

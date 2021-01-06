@@ -93,11 +93,11 @@ max_timeout = 5
 ###################################################################################################
 
 async def usage():
-    msg = "Génère un challenge pour une map spécifiée.\n"
+    msg = "Generates a challenge for a given map.\n"
     msg += "`!!generate <map_url> [duration] [no-move]`\n"
-    msg += "`map_url`: Url vers la map à générer (peut aussi être un shortcut).\n"
-    msg += "`duration` (opt): Durée d'un round en secondes ou au format min:sec.\n"
-    msg += "`no-move` (opt): True (ou un alias valide) pour jouer en no move.\n"
+    msg += "`map_url`: Url or shortcut of a map.\n"
+    msg += "`duration` (opt): Duration of a round min:sec (unlimited by default).\n"
+    msg += "`no-move` (opt): Set it to True (or any valid alias) to disable movement.\n"
     return msg
 
 # True if the bot is already logged in GeoGuessr
@@ -228,7 +228,7 @@ async def generateMap(bot, message, driver, url, duration, no_move):
 
     # If the URL is not valid
     elif not await Utils.isValidURL(url):
-        error = "L'URL n'est pas valide!\n"
+        error = "Invalid URL!\n"
         return CommandReturn(error + await usage(), None, ErrorType.UrlError)
 
     # Go to the URL
@@ -247,7 +247,7 @@ async def generateMap(bot, message, driver, url, duration, no_move):
     if not country:
         title = await getTitle(driver)
         if title == None:
-            error = "L'URL ne pointe pas vers une map GeoGuessr!\n"
+            error = "This URL does not lead to a Geoguessr map!\n"
             return CommandReturn(error + await usage(), None, ErrorType.NotAMapError)
     else:
         title = "Country Streak"
@@ -269,10 +269,10 @@ async def generateMap(bot, message, driver, url, duration, no_move):
     msg += ": " + challenge
 
     if duration == 0:
-        duration = "temps illimité!"
+        duration = "unlimited time!"
         msg += " " + duration
     else:
-        msg += " " + str(duration) + " secondes par rounds!"
+        msg += " " + str(duration) + " seconds per rounds!"
 
     if no_move:
         msg += " (no move)"
@@ -299,7 +299,7 @@ async def handle(bot, command, message, content):
             if len(content) >= 3:
                 duration = await Utils.timeToInt(content[2])
                 if duration == Utils.NAN:
-                    error = "Duration n'est pas un nombre valide!\n"
+                    error = "The given duration is invalid!\n"
                     bot.isWorking = False
                     return CommandReturn(error + await usage(), None, ErrorType.DurationError)
 
@@ -312,20 +312,22 @@ async def handle(bot, command, message, content):
             for _ in range(5):
                 try:
                     res = await generateMap(bot, message, bot.driver, url, duration, no_move)
-                    if res.error == None:
+                    if res.error == None or res.error == ErrorType.NotAMapError or res.error == ErrorType.UrlError:
                         bot.isWorking = False
                         return res
+
                 except Exception as e:
                     print(e)
 
             # If no URL could be generated, return usage
-            error = "Une erreur tierce semble s'être produite.\n"
+            error = "Something went awfully wrong!\n"
             bot.isWorking = False
             return CommandReturn(error + await usage(), None, ErrorType.UnknownError)
     except Exception as e:
+        bot.isWorking = False
         return CommandReturn(str(e), None, ErrorType.UnknownError)
     
-    return CommandReturn("Bot is working!", None, ErrorType.BusyBotError)
+    return CommandReturn("Bot is busy!", None, ErrorType.BusyBotError)
 
 command = Command.Command()
 command.name = "GENERATE"

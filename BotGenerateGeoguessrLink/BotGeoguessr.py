@@ -76,7 +76,7 @@ class MyClient(discord.Client):
 
     async def buildHelp(self):
         help = discord.Embed(title="Bot GeoGuessr Help")
-        help.description = "Toutes les commandes possibles."
+        help.description = "All possibles commands."
         for command in self.commands:
             help.add_field(name=await command.getHelpName(), value=await command.usage(), inline=False)
         return help
@@ -99,7 +99,7 @@ class MyClient(discord.Client):
 
                     # If not enough arguments
                     if not await command.isNbArgsCorrect(content):
-                        error = "Nombre d'argument invalide!\n"
+                        error = "Invalid number of arguments!\n"
                         error = error + await command.usage()
                         await message.channel.send(error)
                     else:

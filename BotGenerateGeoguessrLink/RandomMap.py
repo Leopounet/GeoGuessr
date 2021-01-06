@@ -21,10 +21,10 @@ maxTime = 600
 ###################################################################################################
 
 async def usage():
-    msg = "Génère une map aléatoire parmis les shortcuts. " 
-    msg += "Si aucune durée n'est précisée, cette dernière est aléatoire aussi.\n"
+    msg = "Generates a random map among the given shortcuts." 
+    msg += "If no duration is specified, this will be random as well.\n"
     msg += "`!!random [duration]`\n"
-    msg += "`duration`: La durée d'un round.\n"
+    msg += "`duration`: Duration of a round.\n"
     return msg
 
 async def handle(bot, command, message, content):
@@ -32,7 +32,7 @@ async def handle(bot, command, message, content):
 
     # Si il n'existe aucun shortcut
     if len(keys) == 0:
-        msg = "Aucun shortcut n'a été sauvegardé!"
+        msg = "No shortcut has been saved!"
         return CommandReturn(msg)
 
     duration = "0"

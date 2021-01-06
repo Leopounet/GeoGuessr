@@ -15,7 +15,7 @@ book = ":book:"
 ###################################################################################################
 
 async def usage():
-    msg = "Affiche tous les shortcuts disponibles.\n"
+    msg = "Displays all the available nicknames (shortcuts).\n"
     msg += "`!!list`\n"
     return msg
 
@@ -26,7 +26,7 @@ async def handle(bot, command, message, content):
         msg += "Map: `" + bot.shortcuts[shortcut]["title"] + "` -> Alias: `" + shortcut + "`\n"
 
     if msg == "":
-        msg = "Aucun shortcut n'a été ajouté pour l'instant!"
+        msg = "No shortcut (nickname) has been added yet!"
 
     return CommandReturn(msg)
 

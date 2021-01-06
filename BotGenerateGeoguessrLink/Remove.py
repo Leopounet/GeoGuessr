@@ -19,9 +19,9 @@ x = ":x:"
 ###################################################################################################
 
 async def usage():
-    msg = "Retire un raccourci.\n"
+    msg = "Removes a shortcut (nickname).\n"
     msg += "`!!remove <shortcut>`\n"
-    msg += "`shortcut`: Le shortcut à retirer.\n"
+    msg += "`shortcut`: The shortcut (nickname) to remove.\n"
     return msg
 
 async def handle(bot, command, message, content):
@@ -30,11 +30,11 @@ async def handle(bot, command, message, content):
     name = name.strip("\n")
 
     if not name in bot.shortcuts:
-        error = "Le shortcut n'existe pas!\n"
+        error = "This shortcut (nickname) does not exist!\n"
         return CommandReturn(error + await usage(), None, ErrorType.ShortcutError)
 
     del bot.shortcuts[name]
-    msg = "Le raccourci " + name + " a été supprimé!\n"
+    msg = "The shortcut (nickname) " + name + " has successfully been removed!\n"
 
     await Utils.saveShortcuts(bot)
 

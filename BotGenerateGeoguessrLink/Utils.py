@@ -35,7 +35,7 @@ def execute(command):
 
 # How to use the bot
 async def usage():
-    msg = "!!generate <map_url> [duration]\nSi duration n'est pas précisé, temps infini."
+    msg = "!!generate <map_url> [duration]\nIf duration is not specified, time is unlimited."
     return msg
 
 # Casts a string to an int

@@ -15,9 +15,9 @@ scroll = ":scroll:"
 ###################################################################################################
 
 async def usage():
-    msg = "Affiche les N dernières archives.\n"
+    msg = "Prints the last N archives.\n"
     msg += "`!!archive <N>`\n"
-    msg += "`N`: Le nombre d'archives à afficher.\n"
+    msg += "`N`: Number of archives to print.\n"
     return msg
 
 async def handle(bot, command, message, content):
@@ -27,7 +27,7 @@ async def handle(bot, command, message, content):
     try:
         nb = int(content[1])
     except:
-        error = "Nombre d'archives invalide!"
+        error = "Invalid archive number!"
         return CommandReturn(error + await usage(), None, ErrorType.InvalidNumberError)
 
     if nb < 0:
@@ -46,7 +46,7 @@ async def handle(bot, command, message, content):
         nb -= 1
 
     if msg == "":
-        msg = "Aucune archive!"
+        msg = "No archives!"
 
     return CommandReturn(msg)
 
