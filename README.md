@@ -42,7 +42,8 @@ If you don't want to use an environment variable, just set `TOKEN = "your_token"
 
 In `Utils.py` there are two lines `mail = os.environ["MAIL"]` and `password = os.environ["PASSWD"]`.
 Same idea as with the TOKEN, either set environment variables, or just replace both fields with both your
-mail and password.
+mail and password. Finally, set login method below `login_method = LoginMethod.GOOGLE` to whatever you use 
+(you can find the list in LoginMethod.py).
 
 ### Browsing context has been discarded
 
@@ -95,7 +96,8 @@ Si vous ne voulez pas utiliser de variables d'environement, remplacez la ligne p
 
 Dans `Utils.py` il ya ces deux lignes `mail = os.environ["MAIL"]` et `password = os.environ["PASSWD"]`.
 Comme pour le TOKEN, soit définissez des variables d'environement, ou remplacez les deux champs par votre 
-mail et votre mot de passe.
+mail et votre mot de passe. Enfin, choisissez votre méthode de login juste en dessous avecl a variable
+`login_method = LoginMethod.GOOGLE` (la liste des possibilités est dans LoginMethod.py).
 
 ### Browsing context has been discarded
 

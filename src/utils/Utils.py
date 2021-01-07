@@ -6,6 +6,8 @@ import time
 import importlib.util
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
+from src.utils.LoginMethod import LoginMethod
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -36,7 +38,7 @@ chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789="
 not_command_files = ["Command.py", "CommandReturn.py", "__init__.py"]
 
 # Page to log in GeoGuessr
-loginPage = "https://www.geoguessr.com/signin"
+login_page = "https://www.geoguessr.com/signin"
 
 # My mail
 mail = os.environ["MAIL"]
@@ -44,14 +46,29 @@ mail = os.environ["MAIL"]
 # My password
 password = os.environ["PASSWD"]
 
-# XPATH for log method
+# login method
+login_method = LoginMethod.GOOGLE
+
 xpath_createAccount = "/html/body/div/section/div/div[2]/button[2]"
 xpath_signIn = "/html/body/div[1]/div/div/header/div[2]/div/div[1]/a"
+
+# XPATH for log method google
 xpath_google = "/html/body/div[1]/div/main/div/div/div/div/div/section/div/div[2]/button"
-xpath_mail = "//*[@id=\"identifierId\"]"
-xpath_mailNext = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]"
-xpath_password = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/input"
-xpath_passwordNext = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]"
+xpath_mail_google = "//*[@id=\"identifierId\"]"
+xpath_mailNext_google = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]"
+xpath_password_google = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[1]/div/form/span/section/div/div/div[1]/div[1]/div/div/div/div/div[1]/div/div[1]/input"
+xpath_passwordNext_google = "/html/body/div[1]/div[1]/div[2]/div/div[2]/div/div/div[2]/div/div[2]/div/div[1]/div/div/button/div[2]"
+
+# XPATH for log method classic
+xpath_mail_classic = "/html/body/div[1]/div/main/div/div/div/div/div/form/div/div[1]/div[2]/input"
+xpath_password_classic = "/html/body/div[1]/div/main/div/div/div/div/div/form/div/div[2]/div[2]/input"
+xpath_login_classic = "/html/body/div[1]/div/main/div/div/div/div/div/form/div/section/section[2]/div/div/button"
+
+# XPATH for log method facebook
+xpath_facebook = "/html/body/div[1]/div/main/div/div/div/div/div/section/div/div[1]/button"
+xpath_mail_facebook = "//*[@id=\"email\"]"
+xpath_password_facebook = "//*[@id=\"pass\"]"
+xpath_login_facebook = "//*[@id=\"u_0_0\"]"
 
 ###################################################################################################
 ###################################### METHODS ####################################################
@@ -280,18 +297,13 @@ def get_element(driver, xpath, max_timeout=5):
     time.sleep(0.8)
     return element
 
-async def log(driver):
+async def log_google(driver):
 
     """
-    Logs the user in Geoguessr.
+    Logs in you google account.
 
     :param driver: The webbrowser to log in.
     """
-
-    # Get to the log in page
-    driver.get(loginPage)
-
-    time.sleep(1)
 
     # Log in with google
     get_element(driver, xpath_google).click()
@@ -301,12 +313,67 @@ async def log(driver):
 
         # Log in
         driver.switch_to.window(driver.window_handles[1])
-        get_element(driver, xpath_mail).send_keys(mail)
-        get_element(driver, xpath_mailNext).click()
+        get_element(driver, xpath_mail_google).send_keys(mail)
+        get_element(driver, xpath_mailNext_google).click()
 
-        get_element(driver, xpath_password).send_keys(password)
-        get_element(driver, xpath_passwordNext).click()
+        get_element(driver, xpath_password_google).send_keys(password)
+        get_element(driver, xpath_passwordNext_google).click()
         driver.switch_to.window(driver.window_handles[0])
+
+async def log_classic(driver):
+
+    """
+    Logs into your Geoguessr account.
+
+    :param driver: The webbrowser to log in.
+    """
+    
+    get_element(driver, xpath_mail_classic).send_keys(mail)
+    get_element(driver, xpath_password_classic).send_keys(password)
+    get_element(driver, xpath_login_classic).click()
+
+async def log_facebook(driver):
+
+    """
+    Logs into your facebook account.
+
+    :param driver: The webbrowser to log in.
+    """
+
+    # Log in with google
+    get_element(driver, xpath_facebook).click()
+    
+    # If everything is working fine, a new window has been opened
+    if len(driver.window_handles) > 1:
+
+        # Log in
+        driver.switch_to.window(driver.window_handles[1])
+        get_element(driver, xpath_mail_facebook).send_keys(mail)
+        get_element(driver, xpath_password_facebook).send_keys(password)
+        get_element(driver, xpath_login_facebook).click()
+        driver.switch_to.window(driver.window_handles[0])
+
+async def log(driver):
+
+    """
+    Logs the user in Geoguessr.
+
+    :param driver: The webbrowser to log in.
+    """
+
+    # Get to the log in page
+    driver.get(login_page)
+
+    time.sleep(1)
+
+    if login_method == LoginMethod.GOOGLE:
+        await log_google(driver)
+
+    if login_method == LoginMethod.CLASSIC:
+        await log_classic(driver)
+
+    if login_method == LoginMethod.FACEBOOK:
+        await log_facebook(driver)
 
     time.sleep(5)
 

@@ -91,6 +91,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-utils.ArgumentReader">utils.ArgumentReader module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-utils.Flag">utils.Flag module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-utils.LoginMethod">utils.LoginMethod module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-utils.Queue">utils.Queue module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-utils.Utils">utils.Utils module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-utils">Module contents</a></li>
@@ -103,6 +104,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#submodules">Submodules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.ArgumentReader">utils.ArgumentReader module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.Flag">utils.Flag module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#module-utils.LoginMethod">utils.LoginMethod module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.Queue">utils.Queue module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils.Utils">utils.Utils module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#module-utils">Module contents</a></li>
@@ -397,6 +399,26 @@ This command fails if the flag is already in the list.</p>
 </dd></dl>
 
 </div>
+<div class="section" id="module-utils.LoginMethod">
+<span id="utils-loginmethod-module"></span><h2>utils.LoginMethod module<a class="headerlink" href="#module-utils.LoginMethod" title="Permalink to this headline">¶</a></h2>
+<dl class="py class">
+<dt id="utils.LoginMethod.LoginMethod">
+<em class="property">class </em><code class="sig-prename descclassname">utils.LoginMethod.</code><code class="sig-name descname">LoginMethod</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.LoginMethod.LoginMethod" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">enum.Enum</span></code></p>
+<p>List of implemented login methods so far.</p>
+<dl class="py attribute">
+<dt id="utils.LoginMethod.LoginMethod.CLASSIC">
+<code class="sig-name descname">CLASSIC</code><em class="property"> = (0,)</em><a class="headerlink" href="#utils.LoginMethod.LoginMethod.CLASSIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="utils.LoginMethod.LoginMethod.GOOGLE">
+<code class="sig-name descname">GOOGLE</code><em class="property"> = 1</em><a class="headerlink" href="#utils.LoginMethod.LoginMethod.GOOGLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
 <div class="section" id="module-utils.Queue">
 <span id="utils-queue-module"></span><h2>utils.Queue module<a class="headerlink" href="#module-utils.Queue" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -559,6 +581,28 @@ This command fails if the flag is already in the list.</p>
 <dt id="utils.Utils.log">
 <em class="property">async </em><code class="sig-prename descclassname">utils.Utils.</code><code class="sig-name descname">log</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">driver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.Utils.log" title="Permalink to this definition">¶</a></dt>
 <dd><p>Logs the user in Geoguessr.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>driver</strong> – The webbrowser to log in.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.Utils.log_classic">
+<em class="property">async </em><code class="sig-prename descclassname">utils.Utils.</code><code class="sig-name descname">log_classic</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">driver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.Utils.log_classic" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs into your Geoguessr account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>driver</strong> – The webbrowser to log in.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.Utils.log_google">
+<em class="property">async </em><code class="sig-prename descclassname">utils.Utils.</code><code class="sig-name descname">log_google</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">driver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.Utils.log_google" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs in you google account.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>driver</strong> – The webbrowser to log in.</p>

@@ -20,6 +20,14 @@ utils.Flag module
    :undoc-members:
    :show-inheritance:
 
+utils.LoginMethod module
+------------------------
+
+.. automodule:: utils.LoginMethod
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 utils.Queue module
 ------------------
 
