@@ -51,7 +51,7 @@ If you ever encounter this error, reboot the bot and wait a bit (like 30 seconds
 
 ### Another issue?
 
-Make sure everything is up-to-date and then raise it!
+Make sure everything is up-to-date and then raise it! To raise an issue, you can pre-debug by yourself to help me figure the issue out. To do so, go in `BotGeoguessr.py` and set the line `options.headless = True` to False and then restart the bot (make sure to be on a computer with a graphical interface!). That way, you will be able to pinpoint the exact moment when the bot fails.
 
 # Générateur de challenges GeoGuessr
 
@@ -105,4 +105,6 @@ Si vous avez cette erreur, relancez le bot et attendez quelques secondes avant d
 
 ### Un autre problème?
 
-Assurez-vous que tout est à jour puis signalez le!
+Assurez-vous que tout est à jour puis signalez le! Pour signaler un problème, vous pouvez faire un 
+petit debug préalable pour m'aider. Pour cela, dans `BotGeoguessr.py` vous pouvez mettre la ligne 
+`options.headless = True` à False, puis relancer le bot (assurez vous d'être sur un pc avec une interface graphique!). Comme cela vous allez pouvoir vois à quel moment le bot a un problème.
