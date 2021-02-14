@@ -4,6 +4,8 @@ import sys
 import discord
 import time
 import importlib.util
+
+from selenium.webdriver.firefox.options import Log
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
 
 from src.utils.LoginMethod import LoginMethod
@@ -47,7 +49,7 @@ mail = os.environ["MAIL"]
 password = os.environ["PASSWD"]
 
 # login method
-login_method = LoginMethod.GOOGLE
+login_method = LoginMethod.CLASSIC
 
 xpath_createAccount = "/html/body/div/section/div/div[2]/button[2]"
 xpath_signIn = "/html/body/div[1]/div/div/header/div[2]/div/div[1]/a"
@@ -73,6 +75,19 @@ xpath_login_facebook = "//*[@id=\"u_0_0\"]"
 ###################################################################################################
 ###################################### METHODS ####################################################
 ###################################################################################################
+
+def usage():
+    """
+    Returns a string corresponding to how the program should be used.
+
+    :return: A string.
+    """
+    msg = "*************************************************************************\n"
+    msg += "usage: python3 BotGeoguessr.py\n"
+    msg += "-lm [login-method]: set your login method (google|classic|facebook)\n"
+    msg += "-u  [username/mail]: set your GeoGuessr username or mail\n"
+    msg += "*************************************************************************"
+    return msg
 
 def execute(command):
     """
@@ -398,3 +413,18 @@ async def is_logged(driver):
         except Exception as _:
             return True
     return False
+
+def str_to_lm(string):
+    """
+    Converts a string to a LoginMethod object.
+
+    :param string: The string to convert.
+
+    :return: A LoginMethod object corresponding to the string (if possible), UNKNOWN otherwise.
+    """
+
+    # iterate over all possibilities
+    for lm in LoginMethod:
+        if lm.value.lower() == string.lower():
+            return lm
+    return LoginMethod.UNKNOWN

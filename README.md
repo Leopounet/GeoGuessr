@@ -40,14 +40,15 @@ If you don't want to use an environment variable, just set `TOKEN = "your_token"
 
 ### Linking your GeoGuessr account
 
-In `Utils.py` there are two lines `mail = os.environ["MAIL"]` and `password = os.environ["PASSWD"]`.
-Same idea as with the TOKEN, either set environment variables, or just replace both fields with both your
-mail and password. Finally, set login method below `login_method = LoginMethod.GOOGLE` to whatever you use 
-(you can find the list in LoginMethod.py).
+In `Utils.py` there are two lines `mail = os.environ["MAIL"]` (can be set via command line with the flag `-u`) and `password = os.environ["PASSWD"]`.Same idea as with the TOKEN, either set environment variables, or just replace both fields with both your mail and password. Finally, set login method below `login_method = LoginMethod.GOOGLE` (can be set via command line with the flag `-lm`) to whatever you use (you can find the list in LoginMethod.py).
 
 ### Browsing context has been discarded
 
 If you ever encounter this error, reboot the bot and wait a bit (like 30 seconds) before using it.
+
+### Google sign in fails
+
+If you can't sign in your geoguessr account using Google, then you will have to switch your account type (send a mail to the GeoGuessr team, they'll switch you account to a normal GeoGuessr account in less than a day). This happens because Google tries to limit automatic login as much as possible (probably in an effort to fight against spam bots). Note that before changing your login method you should make sure this is the issue by debugging as explained below.
 
 ### Another issue?
 
@@ -94,14 +95,15 @@ Si vous ne voulez pas utiliser de variables d'environement, remplacez la ligne p
 
 ### Lier votre compte geoGuessr
 
-Dans `Utils.py` il ya ces deux lignes `mail = os.environ["MAIL"]` et `password = os.environ["PASSWD"]`.
-Comme pour le TOKEN, soit définissez des variables d'environement, ou remplacez les deux champs par votre 
-mail et votre mot de passe. Enfin, choisissez votre méthode de login juste en dessous avecl a variable
-`login_method = LoginMethod.GOOGLE` (la liste des possibilités est dans LoginMethod.py).
+Dans `Utils.py` il ya ces deux lignes `mail = os.environ["MAIL"]` (peut être passé en ligne de commande avec le flag `-u`) et `password = os.environ["PASSWD"]`. Comme pour le TOKEN, soit définissez des variables d'environement, ou remplacez les deux champs par votre mail et votre mot de passe. Enfin, choisissez votre méthode de login juste en dessous avecl a variable `login_method = LoginMethod.GOOGLE` (peut être passé par ligne de commande avec le flag `-lm`) (la liste des possibilités est dans LoginMethod.py).
 
 ### Browsing context has been discarded
 
 Si vous avez cette erreur, relancez le bot et attendez quelques secondes avant de l'utiliser (~30 secondes).
+
+### Impossible de se connecter avec Google
+
+Si vous n'arrivez pas à vous connecter à votre compte GeoGuessr avec l'option "se connecter avec Google", il va falloir changer de type de compte (pour ce faire il suffit d'envoyer un mail à l'équipe GeoGuessr, ils vous feront le changement en moins de 24h). Ce problème survient car Google essaie de limiter les connexions automatiques au maximum (probablement pour lutter contre les bot qui spamment). Bien sûr, avant d'envoyer un mail, penser à bien vérifier que c'est le problème que vous rencontrez en débuggant comme expliqué en dessous.
 
 ### Un autre problème?
 

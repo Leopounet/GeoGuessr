@@ -6,9 +6,11 @@ sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../'
 import src.utils.Utils as Utils
 import src.utils.Queue as Queue
 from src.utils.ArgumentReader import ArgumentReader
+import src.utils.Flag as Flag
+import src.utils.LoginMethod as LoginMethod
 
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.options import Log, Options
 
 ###################################################################################################
 ###################################### VARIABLES ##################################################
@@ -20,6 +22,28 @@ TOKEN = os.environ["GEOGUESSR_TOKEN"]
 # options for selenium
 options = Options()
 options.headless = True
+
+# list of arguments flags
+# login method flag
+login_method_flag = "-lm"
+
+# username/mail flag
+username_flag = "-u"
+
+# help flag
+help_flag = "-h"
+
+# flags to read as command line arguments
+command_line_flags = Flag.Flag()
+
+# login method flag
+command_line_flags.add_flag(login_method_flag, 1)
+
+# username/mail flag
+command_line_flags.add_flag(username_flag, 1)
+
+# help flag
+command_line_flags.add_flag(help_flag, 0)
 
 ###################################################################################################
 ###################################### BOT ########################################################
@@ -38,6 +62,23 @@ class BotGeoguessr(discord.Client):
         """
         This method is called when the bot starts.
         """
+
+        # read the command line arguments
+        args = ArgumentReader.read(sys.argv[1:], command_line_flags, 0)
+
+        # get the login method
+        if login_method_flag in args.non_pos:
+            Utils.login_method = Utils.str_to_lm(args.non_pos[login_method_flag][0])
+
+            if Utils.login_method == LoginMethod.LoginMethod.UNKNOWN:
+                print(Utils.usage())
+                exit(0)
+
+        if username_flag in args.non_pos:
+            Utils.mail = args.non_pos[username_flag][0]
+
+        if help_flag in args.non_pos:
+            print(Utils.usage())
 
         # List of all command file
         self.modules = await Utils.get_all_command_modules()

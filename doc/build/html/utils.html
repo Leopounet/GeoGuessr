@@ -408,12 +408,22 @@ This command fails if the flag is already in the list.</p>
 <p>List of implemented login methods so far.</p>
 <dl class="py attribute">
 <dt id="utils.LoginMethod.LoginMethod.CLASSIC">
-<code class="sig-name descname">CLASSIC</code><em class="property"> = (0,)</em><a class="headerlink" href="#utils.LoginMethod.LoginMethod.CLASSIC" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">CLASSIC</code><em class="property"> = 'classic'</em><a class="headerlink" href="#utils.LoginMethod.LoginMethod.CLASSIC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="utils.LoginMethod.LoginMethod.FACEBOOK">
+<code class="sig-name descname">FACEBOOK</code><em class="property"> = 'facebook'</em><a class="headerlink" href="#utils.LoginMethod.LoginMethod.FACEBOOK" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt id="utils.LoginMethod.LoginMethod.GOOGLE">
-<code class="sig-name descname">GOOGLE</code><em class="property"> = 1</em><a class="headerlink" href="#utils.LoginMethod.LoginMethod.GOOGLE" title="Permalink to this definition">¶</a></dt>
+<code class="sig-name descname">GOOGLE</code><em class="property"> = 'google'</em><a class="headerlink" href="#utils.LoginMethod.LoginMethod.GOOGLE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt id="utils.LoginMethod.LoginMethod.UNKNOWN">
+<code class="sig-name descname">UNKNOWN</code><em class="property"> = 'unknown'</em><a class="headerlink" href="#utils.LoginMethod.LoginMethod.UNKNOWN" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -600,6 +610,17 @@ This command fails if the flag is already in the list.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="utils.Utils.log_facebook">
+<em class="property">async </em><code class="sig-prename descclassname">utils.Utils.</code><code class="sig-name descname">log_facebook</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">driver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.Utils.log_facebook" title="Permalink to this definition">¶</a></dt>
+<dd><p>Logs into your facebook account.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>driver</strong> – The webbrowser to log in.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="utils.Utils.log_google">
 <em class="property">async </em><code class="sig-prename descclassname">utils.Utils.</code><code class="sig-name descname">log_google</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">driver</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.Utils.log_google" title="Permalink to this definition">¶</a></dt>
 <dd><p>Logs in you google account.</p>
@@ -622,6 +643,20 @@ This command fails if the flag is already in the list.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt id="utils.Utils.str_to_lm">
+<code class="sig-prename descclassname">utils.Utils.</code><code class="sig-name descname">str_to_lm</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">string</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.Utils.str_to_lm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a string to a LoginMethod object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>string</strong> – The string to convert.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A LoginMethod object corresponding to the string (if possible), UNKNOWN otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt id="utils.Utils.time_to_int">
 <em class="property">async </em><code class="sig-prename descclassname">utils.Utils.</code><code class="sig-name descname">time_to_int</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">value</span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.Utils.time_to_int" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a string representing a time value to an int.</p>
@@ -631,6 +666,17 @@ This command fails if the flag is already in the list.</p>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p>The correspoding integer if possible, NAN otherwise.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt id="utils.Utils.usage">
+<code class="sig-prename descclassname">utils.Utils.</code><code class="sig-name descname">usage</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#utils.Utils.usage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a string corresponding to how the program should be used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>A string.</p>
 </dd>
 </dl>
 </dd></dl>

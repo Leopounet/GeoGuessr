@@ -9,6 +9,7 @@ class LoginMethod(Enum):
     List of implemented login methods so far.
     """
 
-    CLASSIC = 0,
-    GOOGLE = 1,
-    FACEBOOK = 2
+    CLASSIC = "classic"
+    GOOGLE = "google"
+    FACEBOOK = "facebook"
+    UNKNOWN = "unknown"
