@@ -28,7 +28,7 @@ async def usage():
 
 async def getTitle(bot):
     try:
-        return await Utils.getTitle(bot.driver)
+        return await Utils.get_title(bot.driver)
     except Exception as _:
         pass
     return None
