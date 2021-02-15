@@ -26,7 +26,7 @@ async def usage():
     msg += "Example: `!!add https://www.geoguessr.com/maps/world World`\n"
     return msg
 
-async def getTitle(bot):
+async def get_title(bot):
     try:
         return await Utils.get_title(bot.driver)
     except Exception as _:
@@ -54,7 +54,7 @@ async def handle(bot, command, message, arguments):
     time.sleep(1)
 
     # get the title of the challenge
-    title = await getTitle(bot)
+    title = await get_title(bot)
 
     # If the url does not lead to a map (has no title)
     if title == None:
@@ -69,7 +69,7 @@ async def handle(bot, command, message, arguments):
     msg += "It now possible to type `!!generate " + name + " [duration]` to generate a map: " + title + " !"
 
     # save and return
-    await Utils.saveShortcuts(bot)
+    await Utils.save_shortcuts(bot)
     return CommandReturn(msg)
 
 command = Command.Command()
